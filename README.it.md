@@ -1,5 +1,10 @@
 # Delera-AgentCRM · Portable Starter
 
+<p align="center"><img src="assets/hero.svg" alt="Delera-AgentCRM — Più chiarezza, più prossime azioni." /></p>
+
+<p align="center"><strong>Più chiarezza. Più prossime azioni.</strong><br />
+CRM locale, verificabile e pronto a lavorare con te.</p>
+
 Parti da [START_HERE.md](START_HERE.md). È il punto di ingresso comune per ChatGPT Work, Claude Cowork e Codex: nessun modello, account o server MCP obbligatorio è preimpostato.
 
 ## Contenuto

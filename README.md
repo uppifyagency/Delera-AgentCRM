@@ -8,10 +8,10 @@
 
 **Your relationships. Your workspace. An agent to help you follow through.**
 
-[![Preview](https://img.shields.io/badge/status-development_preview-cbfb77?style=flat-square&labelColor=17271e)](#whats-ready)
+[![Preview](https://img.shields.io/badge/status-development_preview-e10070?style=flat-square&labelColor=f5f5f7)](#whats-ready)
 [![TypeScript](https://img.shields.io/badge/TypeScript-CRM_core-3178c6?style=flat-square&labelColor=17271e)](src/)
 [![SQLite](https://img.shields.io/badge/SQLite-local_first-77ccbb?style=flat-square&labelColor=17271e)](docs/PRIVACY.md)
-[![Tests](https://img.shields.io/badge/core_tests-36_verified-cbfb77?style=flat-square&labelColor=17271e)](docs/VERIFICATION.md)
+[![Tests](https://img.shields.io/badge/core_tests-36_verified-e10070?style=flat-square&labelColor=f5f5f7)](docs/VERIFICATION.md)
 
 [**Visit the website ↗**](https://delera-agentcrm.vercel.app) · [**Get started**](docs/QUICKSTART.md) · [**Download ZIP**](https://github.com/uppifyagency/Delera-AgentCRM/archive/refs/heads/main.zip) · [**Italiano**](README.it.md)
 
