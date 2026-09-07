@@ -1,0 +1,17 @@
+import assert from 'node:assert/strict';
+import { readFileSync, readdirSync, existsSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+const here=dirname(fileURLToPath(import.meta.url)), out=join(here,'dist');
+const html=readFileSync(join(out,'index.html'),'utf8');
+assert.equal((html.match(/<h1>/g)||[]).length,1);
+for(const marker of ['name="description"','rel="canonical"','application/ld+json','og:title','name="robots"','lang="en"','DEVELOPMENT PREVIEW','ILLUSTRATIVE DEMO'])assert.ok(html.includes(marker),marker);
+assert.ok(!html.includes('{{'));
+const data=JSON.parse(html.match(/<script type="application\/ld\+json">([^]*?)<\/script>/)[1]);
+assert.equal(data['@graph'][1].codeRepository,'https://github.com/uppifyagency/Delera-AgentCRM');
+for(const match of html.matchAll(/(?:src|href)="(\/[^"#]*)"/g))if(match[1]!=='/')assert.ok(existsSync(join(out,match[1])),match[1]);
+for(const match of html.matchAll(/href="#([^" ]+)"/g))assert.ok(html.includes(`id="${match[1]}"`),match[1]);
+const allowed=new Set(['index.html','styles.css','app.js','assets','robots.txt','sitemap.xml']);
+assert.deepEqual(new Set(readdirSync(out)),allowed);
+assert.ok(readFileSync(join(out,'robots.txt'),'utf8').includes('Allow: /'));
+console.log('Landing checks passed: metadata, structured data, local assets, section links and public-output boundary.');

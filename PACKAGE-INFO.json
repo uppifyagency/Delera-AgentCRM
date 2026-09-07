@@ -1,0 +1,14 @@
+{
+  "name": "Delera-AgentCRM",
+  "version": "0.2.0-preview",
+  "edition": "portable agent-assisted starter",
+  "created": "2026-09-07",
+  "entrypoint": "START_HERE.md",
+  "hosts": ["ChatGPT Work", "Claude Cowork", "Codex"],
+  "hostEndToEndVerified": false,
+  "personalDataIncluded": false,
+  "credentialsIncluded": false,
+  "autonomousBackgroundExecutorIncluded": false,
+  "runtime": "Node.js >=22.23.0 <23; npm; network for first install",
+  "source": "Derived from the existing Delera CRM workspace; personalized bootstrap replaced for portability"
+}

@@ -1,0 +1,13 @@
+.git
+node_modules
+dist
+.agentcrm
+.agentcrm-demo
+.env*
+*.db*
+*.hcrm
+*.enc
+*.key
+*.zip
+.codebase-memory
+website/dist

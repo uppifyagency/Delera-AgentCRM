@@ -1,0 +1,7 @@
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import {finishGoogleGrant,verifyCallback,type GrantProvider} from '../src/google-oauth.js';
+const request={code:verifyCallback('/callback?state=synthetic&code=code','synthetic'),verifier:'synthetic-verifier',audience:'synthetic-client',expectedAccount:'test@example.invalid',scopes:['openid']};
+const provider:GrantProvider={exchange:async()=>({id_token:'synthetic-id',access_token:'synthetic-access',refresh_token:'synthetic-refresh'}),identity:async()=>({email:'test@example.invalid',email_verified:true,sub:'synthetic-sub'}),scopes:async()=>['openid']};
+test('OAuth grant validates identity and granted scope before persistence',async()=>{let writes=0;await finishGoogleGrant(provider,request,()=>true,()=>writes++);assert.equal(writes,1);await assert.rejects(finishGoogleGrant({...provider,identity:async()=>({email:'wrong@example.invalid',email_verified:true,sub:'wrong'})},request,()=>true,()=>writes++));await assert.rejects(finishGoogleGrant({...provider,scopes:async()=>[]},request,()=>true,()=>writes++));assert.equal(writes,1);});
+test('slow provider cannot persist after authorization deadline',async()=>{let active=true,writes=0,release!:()=>void;const slow={...provider,scopes:async()=>{await new Promise<void>(resolve=>release=resolve);return ['openid'];}};const work=finishGoogleGrant(slow,request,()=>active,()=>writes++);await new Promise(resolve=>setImmediate(resolve));active=false;release();await assert.rejects(work,/expired/);assert.equal(writes,0);});

@@ -1,0 +1,14 @@
+node_modules/
+dist/
+.agentcrm/
+.agentcrm-demo/
+.env*
+*.db*
+*.hcrm
+*.enc
+*.key
+*.zip
+.DS_Store
+.vercel/
+.codebase-memory/
+website/dist/

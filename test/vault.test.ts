@@ -1,0 +1,10 @@
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import {mkdtempSync,rmSync,readFileSync,writeFileSync,renameSync,realpathSync} from 'node:fs';
+import {tmpdir} from 'node:os';
+import {join} from 'node:path';
+import {Vault} from '../src/vault.js';
+import {verifyCallback} from '../src/google-oauth.js';
+test('vault encrypts and authenticates entry names; missing key fails closed',()=>{const dir=mkdtempSync(join(realpathSync(tmpdir()),'hermes-vault-'));try{const vault=new Vault(dir);vault.put('credentials',{token:'synthetic-secret'});assert.equal(readFileSync(join(dir,'credentials.enc')).includes(Buffer.from('synthetic-secret')),false);assert.deepEqual(new Vault(dir).get('credentials'),{token:'synthetic-secret'});writeFileSync(join(dir,'other.enc'),readFileSync(join(dir,'credentials.enc')),{mode:0o600});assert.throws(()=>vault.get('other'));assert.throws(()=>vault.get('../escape'));renameSync(join(dir,'master.key'),join(dir,'lost.key'));assert.throws(()=>new Vault(dir));}finally{rmSync(dir,{recursive:true,force:true});}});
+test('OAuth callback rejects wrong state, route, provider denial and missing code',()=>{assert.equal(verifyCallback('/callback?state=valid&code=synthetic','valid'),'synthetic');for(const u of ['/callback?state=wrong&code=x','/other?state=valid&code=x','/callback?state=valid&error=denied','/callback?state=valid'])assert.throws(()=>verifyCallback(u,'valid'));});
+test('oversized UTF-8 value cannot replace a readable vault entry',()=>{const dir=mkdtempSync(join(realpathSync(tmpdir()),'hermes-vault-size-'));try{const vault=new Vault(dir);vault.put('credentials',{text:'original'});assert.throws(()=>vault.put('credentials',{text:'€'.repeat(400000)}));assert.deepEqual(vault.get('credentials'),{text:'original'});}finally{rmSync(dir,{recursive:true,force:true});}});

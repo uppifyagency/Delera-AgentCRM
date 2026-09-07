@@ -1,0 +1,38 @@
+{
+  "name": "delera-agentcrm",
+  "version": "0.2.0-preview",
+  "private": true,
+  "description": "Portable local-first AI CRM starter for ChatGPT Work, Claude Cowork and compatible agents. Pipeline audits, approval-first workflows and personal Google connectors.",
+  "homepage": "https://delera-agentcrm.vercel.app",
+  "repository": {"type":"git","url":"https://github.com/uppifyagency/Delera-AgentCRM.git"},
+  "bugs": {"url":"https://github.com/uppifyagency/Delera-AgentCRM/issues"},
+  "keywords": ["ai-crm","agentic-crm","local-first","chatgpt-work","claude-cowork","mcp","sales-pipeline","google-workspace","typescript","sqlite"],
+  "type": "module",
+  "engines": {
+    "node": ">=22.23.0 <23"
+  },
+  "scripts": {
+    "build": "tsc",
+    "build:site": "node website/build.mjs",
+    "test:site": "node website/test.mjs",
+    "dev:site": "node website/build.mjs && node website/serve.mjs",
+    "test": "npm run build && node --test dist/test/*.test.js",
+    "start": "node scripts/start.mjs",
+    "crm": "node scripts/start.mjs",
+    "doctor": "node scripts/start.mjs doctor",
+    "demo": "node scripts/start.mjs demo",
+    "verify": "npm test && node scripts/verify.mjs",
+    "package": "node scripts/package.mjs"
+  },
+  "dependencies": {
+    "better-sqlite3": "13.0.3",
+    "google-auth-library": "10.5.0",
+    "googleapis": "178.0.0",
+    "zod": "4.5.4"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "9.6.0",
+    "@types/node": "22.20.1",
+    "typescript": "7.0.2"
+  }
+}

@@ -1,0 +1,5 @@
+[
+  {"type":"gmail.received","messageId":"DEMO-message-001","from":"anna@example.invalid","subject":"[DEMO] Richiesta di informazioni"},
+  {"type":"calendar.completed","eventId":"DEMO-meeting-001","summary":"[DEMO] Discovery","attendees":["anna@example.invalid"]},
+  {"type":"pipeline.audit"}
+]

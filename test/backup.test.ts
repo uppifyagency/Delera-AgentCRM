@@ -1,0 +1,10 @@
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import {mkdtempSync,rmSync,readFileSync,writeFileSync} from 'node:fs';
+import {tmpdir} from 'node:os';
+import {join} from 'node:path';
+import {randomBytes} from 'node:crypto';
+import Database from 'better-sqlite3';
+import {CRM} from '../src/core.js';
+import {encryptedBackup,restoreEncryptedBackup} from '../src/backup.js';
+test('encrypted snapshot restores actual records and disables effects; tamper and overwrite denied',async()=>{const dir=mkdtempSync(join(tmpdir(),'delera-restore-'));const source=join(dir,'source.db'),copy=join(dir,'copy.enc'),restored=join(dir,'restored.db'),key=randomBytes(32);const c=new CRM(source);try{c.provision('a','org','acc');const token=c.issueSession('a','org');const person=c.create(token,'person',{name:'Synthetic restore'});const action=c.prepare(token,{account:'acc',kind:'synthetic.send',target:'test@example.invalid',subject:'Synthetic',text:'Test',expires:Date.now()+60000});c.approve(token,action.id,action.hash);await encryptedBackup(source,copy,key);assert.equal(readFileSync(copy).includes(Buffer.from('Synthetic restore')),false);restoreEncryptedBackup(copy,restored,key);const d=new CRM(restored);try{assert.throws(()=>d.read(token,person.id));const inspection=new Database(restored,{readonly:true});assert.equal(JSON.parse((inspection.prepare('SELECT body FROM records WHERE id=?').get(person.id) as {body:string}).body).name,'Synthetic restore');assert.equal((inspection.prepare('SELECT count(*) AS n FROM sessions').get() as {n:number}).n,0);inspection.close();await assert.rejects(d.dispatch(token,action.id,async()=> 'unsafe'));}finally{d.close();}assert.throws(()=>restoreEncryptedBackup(copy,restored,key));assert.throws(()=>restoreEncryptedBackup(copy,join(dir,'wrong.db'),randomBytes(32)));const bytes=readFileSync(copy);bytes[bytes.length-1]^=1;writeFileSync(copy,bytes);assert.throws(()=>restoreEncryptedBackup(copy,join(dir,'tampered.db'),key));}finally{c.close();rmSync(dir,{recursive:true,force:true});}});
